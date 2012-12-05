@@ -1,4 +1,4 @@
-pyades
+plyades
 ======
 
 A python astrodynamics library.
