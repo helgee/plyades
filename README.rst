@@ -1,7 +1,7 @@
 plyades
 =======
 
-.. image:: http://github.com/helgee/plyades/blob/master/logo.jpg
+.. image:: https://raw.github.com/helgee/plyades/master/logo.jpg
 
 A python astrodynamics library.
 
