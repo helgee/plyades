@@ -1,4 +1,4 @@
-.. image:: https://raw.github.com/helgee/plyades/master/logo.jpg
+.. image:: https://raw.github.com/helgee/plyades/master/plyades_logo.jpg
     :scale: 75
 
 A Python Astrodynamics Library
