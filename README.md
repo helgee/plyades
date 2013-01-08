@@ -1,7 +1,7 @@
 ![Plyades logo](https://raw.github.com/helgee/plyades/master/plyades_logo.jpg)
 
 A Python Astrodynamics Library
-##############################
+==============================
 
 ## Documentation
 
