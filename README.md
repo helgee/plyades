@@ -4,7 +4,9 @@
 A Python Astrodynamics Library
 ------------------------------
 
-**Work in progress, obviously.**
+Data Types
+----------
+
 
 Time and Reference Frame Conversion
 -----------------------------------
