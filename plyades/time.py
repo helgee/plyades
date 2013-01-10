@@ -1,6 +1,6 @@
 import datetime
 import numpy as np
-import constants
+import const
 
 class Epoch(datetime.datetime):
 	@property
