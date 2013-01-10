@@ -1,9 +1,7 @@
 **Note:** This software is currently a work in progress and most features mentioned below are not implemented, yet. 
 
-![Plyades logo](https://raw.github.com/helgee/plyades/master/plyades_logo.jpg)
-
-A Python Astrodynamics Library
-==============================
+Plyades
+=======
 
 Plyades is an Astrodynamics Library, written in Python and based on Numpy and Scipy.	
 
