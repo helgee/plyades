@@ -12,9 +12,9 @@ tle = '''ISS (ZARYA)
 1 25544U 98067A   13008.88529319  .00008403  00000-0  14424-3 0  9866
 2 25544  51.6459 179.6935 0016178 136.4951 358.8863 15.51957773809967'''
 
-state = pl.State.from_tle(tle)
+initial_state = pl.state.from_tle(tle)
 
-p = pl.Propagator(state)
+p = pl.Propagator(initial_state)
 p.propagate(days=5)
 p.plot()
 
