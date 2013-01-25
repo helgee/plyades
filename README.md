@@ -3,7 +3,7 @@
 Plyades
 =======
 
-Plyades is an Astrodynamics Library, written in Python and based on Numpy and Scipy.	
+Plyades is an astrodynamics library, written in Python and based on Numpy and Scipy.	
 
 ```python
 import plyades as pl
