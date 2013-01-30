@@ -26,6 +26,11 @@ elements = p.results[-1].elements
 # Installation
 Clone the repository.
 
+# Dependencies
+
+* Numpy
+* Scipy
+
 # Getting Started
 ## State Representation
 Plyades' basic data type is the state
