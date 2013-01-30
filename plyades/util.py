@@ -67,3 +67,37 @@ def dms2rad(degrees, minutes, seconds):
 
 def hms2rad(degrees, minutes, seconds):
 	return (degrees + minutes/60 + seconds/3600) * 15 * np.pi/180
+
+def mag(a):
+    """Vectorized magnitude calculation for an array of vectors.
+
+    Parameters
+    ----------
+    a: numpy.ndarray
+        An mxn-array containing m vectors with n elements.
+
+    Returns
+    -------
+    m: numpy.ndarray
+        An mx1-array containing the magnitude for each vector.
+    """
+    return np.sqrt(np.square(a).sum(axis=1, keepdims=True))
+
+def dot(a, b):
+    """Vectorized dot product for arrays of vectors.
+
+    Parameters
+    ----------
+    a: numpy.ndarray
+        An mxn-array containing m vectors with n elements.
+    b: numpy.ndarray
+        An mxn-array containing m vectors with n elements.
+
+
+    Returns
+    -------
+    m: numpy.ndarray
+        An mx1-array containing the result of a*b for each pair of vectors. 
+    """
+    return (a * b).sum(axis=1, keepdims=True)
+
