@@ -10,6 +10,8 @@ def rhs(s, t):
 class Propagator:
     pass
 
+class Orbit:
+    pass
 
 def elements(vector, mu):
     r = np.atleast_2d(vector)[:, 0:3]
@@ -45,7 +47,7 @@ def elements(vector, mu):
     if a_ix.any():
         ano[a_ix] = 2 * np.pi - ano[a_ix]
     # Return a 1D vector if the input was 1-dimensional.
-    if vector.shape == (1, 1):
+    if vector.shape == (6,):
         return np.hstack([sma, ecc, inc, node, peri, ano]).flatten()
     else:
         return np.hstack([sma, ecc, inc, node, peri, ano])
