@@ -47,11 +47,39 @@ def elements(vector, mu):
     if a_ix.any():
         ano[a_ix] = 2 * np.pi - ano[a_ix]
     # Return a 1D vector if the input was 1-dimensional.
-    if vector.shape == (6,):
-        return np.hstack([sma, ecc, inc, node, peri, ano]).flatten()
+    if vector.shape == (6, ):
+        return np.hstack((sma, ecc, inc, node, peri, ano)).flatten()
     else:
-        return np.hstack([sma, ecc, inc, node, peri, ano])
+        return np.hstack((sma, ecc, inc, node, peri, ano))
 
 
 def vector(elements, mu):
-    pass
+    ele = np.atleast_2d(elements)
+    sma = ele[:, 0, np.newaxis]
+    ecc = ele[:, 1, np.newaxis]
+    inc = ele[:, 2, np.newaxis]
+    node = ele[:, 3, np.newaxis]
+    peri = ele[:, 4, np.newaxis]
+    ano = ele[:, 5, np.newaxis]
+    u = peri + ano
+
+    p = sma * (1 - np.square(ecc))
+    e_ix = ecc == 1
+    if e_ix.any():
+        p[e_ix] = sma[e_ix]
+
+    r = p / (1 + ecc * np.cos(ano))
+    x = r * (np.cos(node) * np.cos(u) - np.sin(node) * np.cos(inc) * np.sin(u))
+    y = r * (np.sin(node) * np.cos(u) + np.cos(node) * np.cos(inc) * np.sin(u))
+    z = r * np.sin(inc) * np.sin(u)
+    vr = np.sqrt(mu / p) * ecc * np.sin(ano)
+    vf = np.sqrt(mu * p) / r
+    vx = (vr * (np.cos(node) * np.cos(u) - np.sin(node) * np.cos(inc) * np.sin(u))
+         - vf * (np.cos(node) * np.sin(u) + np.sin(node) * np.cos(u) * np.cos(inc)))
+    vy = (vr * (np.sin(node) * np.cos(u) + np.cos(node) * np.cos(inc) * np.sin(u))
+         - vf * (np.sin(node) * np.sin(u) - np.cos(node) * np.cos(u) * np.cos(inc)))
+    vz = vr * np.sin(inc) * np.sin(u) + vf * np.cos(u) * np.sin(inc)
+    if elements.shape == (6, ):
+        return np.hstack((x, y, z, vx, vy, vz)).flatten()
+    else:
+        return np.hstack((x, y, z, vx, vy, vz))
