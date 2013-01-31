@@ -22,7 +22,7 @@ class OrbitTest(unittest.TestCase):
             for i in range(len(el)):
                 self.assertAlmostEqual(el[i], values["elements"][i], delta=1e-2)
 
-    # The input values seem to be inaccurate.
+    # The input values seem to be inaccurate. As the results have been cross-checked.
     # TODO: Find better input values.
     def test_vector(self):
         vector = pl.orbit.vector(values["elements"], mu)
