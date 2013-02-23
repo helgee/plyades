@@ -1,3 +1,4 @@
+from core import Epoch, State, Orbit
 import constants
 import const
 import ephem
@@ -7,6 +8,3 @@ import state
 import time
 import util
 import vis
-from orbit import Propagator
-from state import State
-from time import Epoch
