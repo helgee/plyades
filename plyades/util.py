@@ -97,7 +97,7 @@ def dot(a, b):
     Returns
     -------
     m: numpy.ndarray
-        An mx1-array containing the result of a*b for each pair of vectors. 
+        An mx1-array containing of a*b for each vector pair. 
     """
     return (a * b).sum(axis=1, keepdims=True)
 
