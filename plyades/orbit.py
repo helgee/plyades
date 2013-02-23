@@ -1,16 +1,10 @@
 from __future__ import division
+from scipy import optimize
 import numpy as np
 import util
 
 
 def rhs(s, t):
-    pass
-
-
-class Propagator:
-    pass
-
-class Orbit:
     pass
 
 def elements(vector, mu):
@@ -83,3 +77,14 @@ def vector(elements, mu):
         return np.hstack((x, y, z, vx, vy, vz)).flatten()
     else:
         return np.hstack((x, y, z, vx, vy, vz))
+
+def solve_kepler(mean, ecc):
+    def kepler_eq(ecc_ano):
+        return ecc_ano - ecc * np.sin(ecc_ano) - mean
+    def kepler_eq_der(ecc_ano):
+        return 1 - ecc * math.cos(ecc_ano)
+    return optimize.newton(kepler_eq,mean, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+
+def kepler():
+    pass
+
