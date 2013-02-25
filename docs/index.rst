@@ -11,7 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-
+.. automodule:: plyades.util
+    :members:
 
 Indices and tables
 ==================
