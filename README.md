@@ -23,6 +23,7 @@ elements = p.results[-1].elements
 ```
 
 # Documentation
+Read the documentation at [http://plyades.readthedocs.org](http://plyades.readthedocs.org).
 
 # Installation
 Clone the repository.
