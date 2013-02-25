@@ -1,3 +1,5 @@
+"""`plyades.util` contains mathematical and miscellaneous utility functions.
+"""
 from __future__ import division
 import re
 import numpy as np

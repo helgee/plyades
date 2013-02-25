@@ -3,21 +3,29 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Plyades's documentation!
-===================================
+Plyades: A Python Astrodynamics Library
+=======================================
 
-Contents:
+Features
+--------
+- High-level objects representing the state of a spacecraft
+- Reference frame transformations
+- Numerical orbit propagation
+
+User Guide
+----------
+
+API Documentation
+-----------------
 
 .. toctree::
-   :maxdepth: 2
+    api
 
-.. automodule:: plyades.util
-    :members:
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+.. Indices and tables
+.. ==================
+.. 
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
+.. 
