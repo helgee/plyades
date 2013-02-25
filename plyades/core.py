@@ -25,7 +25,7 @@ class Epoch(datetime):
 
     @property
     def mjd(self):
-        return self.jd - const.epoch.mjd
+        return self.jd - constants.epoch.mjd
 
     @classmethod
     def fromdatetime(cls, dt):
