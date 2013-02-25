@@ -2,6 +2,7 @@
 
 Plyades
 =======
+[![Build Status](https://travis-ci.org/helgee/plyades.png)](https://travis-ci.org/helgee/plyades)
 
 Plyades is an astrodynamics library, written in Python and based on Numpy and Scipy.	
 
