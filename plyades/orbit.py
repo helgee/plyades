@@ -78,13 +78,43 @@ def vector(elements, mu):
     else:
         return np.hstack((x, y, z, vx, vy, vz))
 
-def solve_kepler(mean, ecc):
-    def kepler_eq(ecc_ano):
-        return ecc_ano - ecc * np.sin(ecc_ano) - mean
-    def kepler_eq_der(ecc_ano):
-        return 1 - ecc * math.cos(ecc_ano)
-    return optimize.newton(kepler_eq,mean, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+def period(a, mu):
+    return np.sqrt(4 * a**3 * np.pi**2 / mu)
 
-def kepler():
-    pass
+def ecc2true(E, e):
+    return 2 * np.arctan2(np.sqrt(1 + e) * np.sin(E / 2), np.sqrt(1 - e) * np.cos(E / 2))
+
+def true2ecc(T, e):
+    return 2 * np.arctan2(np.sqrt(1 - e) * np.sin(T / 2), np.sqrt(1 + e) * np.cos(T / 2))
+
+def ecc2mean(E, e):
+    return E - e * np.sin(E)
+
+def mean2ecc(M, e):
+    def kepler_eq(E):
+        return E - e * np.sin(E) - M
+    def kepler_eq_der(E):
+        return 1 - e * np.cos(E)
+    return optimize.newton(kepler_eq, M, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+
+def kepler(ele, dt, mu):
+    E0 = true2ecc(ele[5], ele[1])
+    M0 = ecc2mean(E0, ele[1])
+    n = 2*np.pi/period(ele[0], mu)
+    M = M0 + n*dt
+    if not np.isscalar(M):
+        E = np.zeros(np.shape(M))
+        out = np.zeros((len(M),6))
+        for i, m in enumerate(M):
+            E[i] = mean2ecc(m, ele[1])
+    else:
+        out = np.zeros((1,6))
+        E = mean2ecc(M, ele[1])
+    T = ecc2true(E, ele[1])
+    out[:,0:5] = ele[0:5]
+    out[:,5] = T
+    if out.shape == (6, ):
+        return out.flatten()
+    else:
+        return out
 

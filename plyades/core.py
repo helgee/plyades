@@ -1,16 +1,20 @@
 from __future__ import division, print_function
 import collections
-from datetime import datetime
+import datetime
 import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import constants
+import const
 import time
+import orbit
 
 # Too much problems with Python 2.X
 # symbols = {"Sun": u"\u2609", "Mercury": u"\u263F", "Venus": u"\u2640", "Earth": u"\u2641",
 #            "Mars": u"\u2642", "Jupiter": u"\u2643", "Saturn": u"\u2644", "Uranus": u"\u26E2",
 #            "Neptune": u"\u2646", "Moon": u"\u263E"}
 
-class Epoch(datetime):
+class Epoch(datetime.datetime):
     @property
     def jd(self):
         return time.datetime2jd(self)
@@ -84,12 +88,32 @@ class State(np.ndarray):
         return np.asarray(self)
 
 class Orbit:
-    def __init__(self, initial_state, options=None, t=None):
+    def __init__(self, state, options=None, t=None):
         if options is None:
             options = {}
         self.body = options.get("body", "Earth")
         self.frame = options.get("frame", "MEE2000")
-        self.t = getattr(init, 't', t)
+        self.solver = options.get("solver", "kepler")
+        self.t = [getattr(state, 't', t)]
         if self.t is None:
             raise ValueError("Initial epoch has not been set!")
-        self.initial_state = State(init, self.t)
+        self.state = state.rv
+
+    def propagate(self, dt=None, revolutions=1, step=1):
+        s0 = np.atleast_2d(self.state)[0,:]
+        t0 = self.t[0]
+        mu = const.planets[self.body.lower()]["mu"]
+        if self.solver == "kepler":
+            ele = orbit.elements(s0, mu)
+            if dt is None:
+                tend = orbit.orbital_period(ele[0], mu)
+                dt = np.arange(step,tend,step)
+            self.elements = np.vstack((ele, orbit.kepler(ele, dt, mu)))
+            self.t = [t0 + datetime.timedelta(seconds=t) for t in dt]
+            self.t.insert(0,t0)
+            self.state = orbit.vector(self.elements, mu)
+
+    def plot(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot(self.state[:,0], self.state[:,1], self.state[:,2])
