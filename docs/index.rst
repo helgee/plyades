@@ -6,14 +6,22 @@
 Plyades: A Python Astrodynamics Library
 =======================================
 
+Plyades is an MIT-licensed astrodynamics library based on Numpy and Scipy.
+It aims to provide a comprehensive toolset for common mission analysis and flight dynamics tasks.
+All functionality 
+The API provides powerful high-level objects for pythonic ease-of-use while all the function
+
 Features
 --------
-- High-level objects representing the state of a spacecraft
+.. - High-level objects representing the state of a spacecraft
 - Reference frame transformations
 - Numerical orbit propagation
 
 User Guide
 ----------
+
+.. toctree::
+    user
 
 API Documentation
 -----------------

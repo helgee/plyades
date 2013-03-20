@@ -1,13 +1,13 @@
 .. _api:
 
-High-Level Objects
+High-level wrapper
 ==================
 
 .. automodule:: plyades.core
     :members:
 
-Low-Level Functions
-===================
+Low-level routines
+==================
 
 Utility Functions
 -----------------
