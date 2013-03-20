@@ -95,14 +95,14 @@ class Orbit:
         self.body = options.get("body", "Earth")
         self.frame = options.get("frame", "MEE2000")
         self.solver = options.get("solver", "kepler")
-        self.t = [getattr(state, 't', t)]
+        self.t = getattr(state, "t", t)
         if self.t is None:
-            raise ValueError("Initial epoch has not been set!")
-        self.state = state.rv
+            raise ValueError("Initial epoch has not been set.")
+        self.state = getattr(state, "rv", state)
 
     def propagate(self, dt=None, revolutions=1, step=1):
         s0 = np.atleast_2d(self.state)[0,:]
-        t0 = self.t[0]
+        t0 = np.atleast_1d(self.t)[0]
         mu = const.planets[self.body.lower()]["mu"]
         if self.solver == "kepler":
             ele = orbit.elements(s0, mu)
