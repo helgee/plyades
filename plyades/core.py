@@ -9,6 +9,7 @@ import const
 import time
 import orbit
 
+
 # Too much problems with Python 2.X
 # symbols = {"Sun": u"\u2609", "Mercury": u"\u263F", "Venus": u"\u2640", "Earth": u"\u2641",
 #            "Mars": u"\u2642", "Jupiter": u"\u2643", "Saturn": u"\u2644", "Uranus": u"\u26E2",
@@ -106,7 +107,7 @@ class Orbit:
         if self.solver == "kepler":
             ele = orbit.elements(s0, mu)
             if dt is None:
-                tend = orbit.orbital_period(ele[0], mu)
+                tend = orbit.period(ele[0], mu)
                 dt = np.arange(step,tend,step)
             self.elements = np.vstack((ele, orbit.kepler(ele, dt, mu)))
             self.t = [t0 + datetime.timedelta(seconds=t) for t in dt]
@@ -114,6 +115,17 @@ class Orbit:
             self.state = orbit.vector(self.elements, mu)
 
     def plot(self):
-        fig = plt.figure()
+        fig = plt.figure("Plyades Plot")
         ax = fig.add_subplot(111, projection='3d')
-        ax.plot(self.state[:,0], self.state[:,1], self.state[:,2])
+        r = const.planets[self.body.lower()]["req"]
+
+        u = np.linspace(0, 2 * np.pi, 100)
+        v = np.linspace(0, np.pi, 100)
+
+        x = r * np.outer(np.cos(u), np.sin(v))
+        y = r * np.outer(np.sin(u), np.sin(v))
+        z = r * np.outer(np.ones(np.size(u)), np.cos(v))
+        ax.plot_surface(x, y, z,  rstride=4, cstride=4, color='b', alpha=.3, linewidth=1, edgecolor="b")
+        ax.plot(self.state[:,0], self.state[:,1], self.state[:,2], color="r")
+
+        plt.show()
