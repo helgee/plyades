@@ -1,4 +1,4 @@
-from core import Epoch, State, Orbit
+from core import State, Orbit
 import constants
 import const
 import ephem

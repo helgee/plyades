@@ -4,7 +4,7 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import constants
+import const
 import const
 import time
 import orbit
@@ -15,46 +15,12 @@ import orbit
 #            "Mars": u"\u2642", "Jupiter": u"\u2643", "Saturn": u"\u2644", "Uranus": u"\u26E2",
 #            "Neptune": u"\u2646", "Moon": u"\u263E"}
 
-class Epoch(datetime.datetime):
-    @property
-    def jd(self):
-        return time.datetime2jd(self)
-
-    @property
-    def jd2000(self):
-        return self.jd - constants.epoch.jd2000
-
-    @property
-    def jd1950(self):
-        return self.jd - constants.epoch.jd1950
-
-    @property
-    def mjd(self):
-        return self.jd - constants.epoch.mjd
-
-    @classmethod
-    def fromdatetime(cls, dt):
-        if dt.tzinfo is not None:
-            raise ValueError("Datetime is expected to be in UTC and timezone unaware.")
-        else:
-            return cls(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond)
-        
-
-
-class State(np.ndarray):
-    def __new__(cls, rv, t=Epoch(2000,1,1), body="Earth", frame="MEE2000"):
-        obj = np.asarray(rv).view(cls)
-        obj.t = t
-        obj.body = body
-        obj.frame = frame
-        return obj
-
-    def __array_finalize__(self, obj):
-        if obj is None:
-            return
-        self.t = getattr(obj, "t", Epoch(2000,1,1))
-        self.body = getattr(obj, "body", "Earth")
-        self.frame = getattr(obj, "frame", "MEE2000")
+class State(object):
+    def __init__(self, rv, t=datetime.datetime(2000,1,1), body="Earth", frame="MEE2000"):
+        self.rv = rv
+        self.t = t
+        self.body = body
+        self.frame = frame
 
     def __repr__(self):
         rv = self.rv.__repr__()
@@ -64,8 +30,7 @@ class State(np.ndarray):
         return "State({}, t={}, body={}, frame={})".format(rv, t, body, frame)
 
     def __str__(self):
-        string = []
-        string.append("Epoch: {}")
+        string = ["Epoch: {}"]
         string.append("Reference frame: {}")
         string.append("Central body: {}")
         string.append("x [km]: {}")
@@ -77,16 +42,33 @@ class State(np.ndarray):
         return "\n".join(string).format(self.t, self.frame, self.body, *self)
 
     @property
+    def jd(self):
+        return time.datetime2jd(self.t)
+
+    @property
+    def jd2000(self):
+        return self.jd - const.epoch["jd2000"]
+
+    @property
+    def jd1950(self):
+        return self.jd - const.epoch["jd1950"]
+
+    @property
+    def mjd(self):
+        return self.jd - const.epoch["mjd"]
+
+    @property
     def r(self):
-        return np.asarray(self)[0:3]
+        return self.rv[0:3]
 
     @property
     def v(self):
-        return np.asarray(self)[3:6]
+        return self.rv[3:6]
 
     @property
-    def rv(self):
-        return np.asarray(self)
+    def elements(self):
+        mu = const.planets[self.body.lower()]["mu"]
+        return orbit.elements(self.rv, mu)
 
 class Orbit:
     def __init__(self, state, options=None, t=None):
@@ -99,6 +81,15 @@ class Orbit:
         if self.t is None:
             raise ValueError("Initial epoch has not been set.")
         self.state = getattr(state, "rv", state)
+
+    def __str__(self):
+        string = ["Orbit at initial epoch:"]
+        return "\n".join(string)
+
+    @property
+    def elements(self):
+        mu = const.planets[self.body.lower()]["mu"]
+        return orbit.elements(self.state, mu)
 
     def propagate(self, dt=None, revolutions=1, step=1):
         s0 = np.atleast_2d(self.state)[0,:]
@@ -115,16 +106,18 @@ class Orbit:
             self.state = orbit.vector(self.elements, mu)
 
     def plot(self):
+
         fig = plt.figure("Plyades Plot")
         ax = fig.add_subplot(111, projection='3d')
-        r = const.planets[self.body.lower()]["req"]
+        re = const.planets[self.body.lower()]["re"]
+        rp = const.planets[self.body.lower()]["rp"]
 
         u = np.linspace(0, 2 * np.pi, 100)
         v = np.linspace(0, np.pi, 100)
 
-        x = r * np.outer(np.cos(u), np.sin(v))
-        y = r * np.outer(np.sin(u), np.sin(v))
-        z = r * np.outer(np.ones(np.size(u)), np.cos(v))
+        x = re * np.outer(np.cos(u), np.sin(v))
+        y = re * np.outer(np.sin(u), np.sin(v))
+        z = rp * np.outer(np.ones(np.size(u)), np.cos(v))
         ax.plot_surface(x, y, z,  rstride=4, cstride=4, color='b', alpha=.3, linewidth=1, edgecolor="b")
         ax.plot(self.state[:,0], self.state[:,1], self.state[:,2], color="r")
 
