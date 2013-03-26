@@ -1,10 +1,8 @@
 from __future__ import division, print_function
-import collections
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import const
 import const
 import time
 import orbit
@@ -106,7 +104,6 @@ class Orbit:
             self.state = orbit.vector(self.elements, mu)
 
     def plot(self):
-
         fig = plt.figure("Plyades Plot")
         ax = fig.add_subplot(111, projection='3d')
         re = const.planets[self.body.lower()]["re"]
