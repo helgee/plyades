@@ -1,5 +1,4 @@
 from core import State, Orbit
-import constants
 import const
 import ephem
 import examples
