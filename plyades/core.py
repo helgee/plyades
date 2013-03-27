@@ -28,16 +28,15 @@ class State(object):
         return "State({}, t={}, body={}, frame={})".format(rv, t, body, frame)
 
     def __str__(self):
-        string = ["Epoch: {}"]
-        string.append("Reference frame: {}")
-        string.append("Central body: {}")
-        string.append("x [km]: {}")
-        string.append("y [km]: {}")
-        string.append("z [km]: {}")
-        string.append("vx [km/s]: {}")
-        string.append("vy [km/s]: {}")
-        string.append("vz [km/s]: {}")
-        return "\n".join(string).format(self.t, self.frame, self.body, *self.rv)
+        strings = ["{:<17}{}".format("Epoch:", self.t), "{:<17}{}".format("Reference frame:", self.frame),
+                   "{:<17}{}".format("Central body:", self.body), ""]
+        names = ["x [km]:", "y [km]:", "z [km]:", "vx [km/s]:", "vy [km/s]:", "vz [km/s]:"]
+        values = self.rv
+        strings.extend(["{:<11}{:>20,.5f}".format(name, value) for name, value in zip(names, values)])
+        return "\n".join(strings)
+
+    def print_elements(self):
+        orbit.print_elements(self.elements)
 
     @property
     def jd(self):
@@ -67,6 +66,11 @@ class State(object):
     def elements(self):
         mu = const.planets[self.body.lower()]["mu"]
         return orbit.elements(self.rv, mu)
+
+    @property
+    def period(self):
+        mu = const.planets[self.body.lower()]["mu"]
+        return orbit.period(self.elements[0], mu)
 
 class Orbit:
     def __init__(self, state, options=None, t=None):

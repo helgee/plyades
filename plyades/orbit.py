@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division, print_function
 from scipy import optimize
 import numpy as np
 import util
@@ -46,6 +46,14 @@ def elements(vector, mu):
     else:
         return np.hstack((sma, ecc, inc, node, peri, ano))
 
+def print_elements(ele):
+    names = ["Semi-major axis [km]:", "Eccentricity:", "Inclination [deg]:",
+             "Ascending node [deg]:", "Argument of perigee [deg]:",
+             "True anomaly [deg]:"]
+    elements = np.append(ele[0:2], np.degrees(ele[2:6]))
+
+    strings = ["{:<26}{:>16.5f}".format(name, element) for name, element in zip(names, elements)]
+    print("\n".join(strings))
 
 def vector(elements, mu):
     ele = np.atleast_2d(elements)
