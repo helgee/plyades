@@ -37,7 +37,7 @@ class State(object):
         string.append("vx [km/s]: {}")
         string.append("vy [km/s]: {}")
         string.append("vz [km/s]: {}")
-        return "\n".join(string).format(self.t, self.frame, self.body, *self)
+        return "\n".join(string).format(self.t, self.frame, self.body, *self.rv)
 
     @property
     def jd(self):
