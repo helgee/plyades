@@ -8,6 +8,6 @@ setup(name="Plyades",
       author="Helge Eichhorn",
       author_email="mail@helgeeichhorn.de",
       url="https://github.com/helgee/plyades",
-      packages=["plyades", "plyades.constants", "plyades.tests"],
+      packages=["plyades", "plyades.tests"],
       license="MIT License",
       )
