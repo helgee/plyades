@@ -16,8 +16,11 @@ import orbit
 class State(object):
     def __init__(self, rv, t=datetime.datetime(2000,1,1), body="Earth", frame="MEE2000"):
         self.rv = rv
+        self._rv = rv
         self.t = t
         self.body = body
+        self._body = body
+        self._frame = frame
         self.frame = frame
 
     def __repr__(self):
