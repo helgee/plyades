@@ -2,13 +2,6 @@ from __future__ import division, print_function
 import numpy as np
 import util
 
-def pelvec(s, mu):
-	m, n = s.shape
-
-
-def pvecle(s, mu):
-	pass
-
 def precession(date):
     ''' Vallado 2nd Edition p.215
     '''
