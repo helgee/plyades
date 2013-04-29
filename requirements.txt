@@ -1,1 +1,4 @@
 numpy>=1.7
+jplephem
+de421
+numpydoc
