@@ -13,7 +13,7 @@ def sidereal(jd):
     else:
         return sidereal
 
-def calendar2jd(year, month, day, hour=0, minute=0, second=0, microsecond=0):
+def calendar_jd(year, month, day, hour=0, minute=0, second=0, microsecond=0):
     year = np.atleast_1d(year)
     month = np.atleast_1d(month)
     day = np.atleast_1d(day)
@@ -31,7 +31,7 @@ def calendar2jd(year, month, day, hour=0, minute=0, second=0, microsecond=0):
     else:
         return jd
 
-def datetime2jd(dt):
+def datetime_jd(dt):
     try:
         years = [d.year for d in dt]
         months = [d.month for d in dt]
@@ -48,9 +48,9 @@ def datetime2jd(dt):
         minutes = dt.minute
         seconds = dt.second
         microseconds = dt.microsecond
-    return calendar2jd(years, months, days, hours, minutes, seconds, microseconds)
+    return calendar_jd(years, months, days, hours, minutes, seconds, microseconds)
 
-def jd2calendar(jd):
+def jd_calendar(jd):
     jd = np.atleast_1d(jd) + .5
     z = np.trunc(jd)
     f = jd - z
@@ -110,9 +110,9 @@ def jd2calendar(jd):
     else:
         return year, month, day, hour, minute, second, microsecond
 
-def jd2datetime(jd):
+def jd_datetime(jd):
     jd = np.atleast_1d(jd)
-    cal = jd2calendar(jd)
+    cal = jd_calendar(jd)
     try:
         return [datetime.datetime(year, month, day, hour, minute, second, microsecond)
                 for year, month, day, hour, minute, second, microsecond in cal]

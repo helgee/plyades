@@ -15,13 +15,13 @@ import orbit
 
 class State(object):
     def __init__(self, rv, t=datetime.datetime(2000,1,1), body="Earth", frame="MEE2000"):
+        self.t = t
         self.rv = rv
         self._rv = rv
-        self.t = t
         self.body = body
         self._body = body
-        self._frame = frame
         self.frame = frame
+        self._frame = frame
 
     def __repr__(self):
         rv = self.rv.__repr__()
@@ -43,7 +43,7 @@ class State(object):
 
     @property
     def jd(self):
-        return time.datetime2jd(self.t)
+        return time.datetime_jd(self.t)
 
     @property
     def jd2000(self):
