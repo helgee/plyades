@@ -1,4 +1,5 @@
 from __future__ import division, print_function
+import collections
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,22 +14,20 @@ import orbit
 #            "Mars": u"\u2642", "Jupiter": u"\u2643", "Saturn": u"\u2644", "Uranus": u"\u26E2",
 #            "Neptune": u"\u2646", "Moon": u"\u263E"}
 
-class State(object):
-    def __init__(self, rv, t=datetime.datetime(2000,1,1), body="Earth", frame="MEE2000"):
-        self.t = t
-        self.rv = rv
-        self._rv = rv
-        self.body = body
-        self._body = body
-        self.frame = frame
-        self._frame = frame
+class State(collections.namedtuple("State", ["rv", "t", "body", "frame"])):
+    __slots__ = ()
+    # def __init__(self, rv, t=datetime.datetime(2000,1,1), body="Earth", frame="MEE2000"):
+    #     self.t = t
+    #     self.rv = rv
+    #     self.body = body
+    #     self.frame = frame
 
-    def __repr__(self):
-        rv = self.rv.__repr__()
-        t = self.t.__repr__()
-        body = self.body.__repr__()
-        frame = self.frame.__repr__()
-        return "State({}, t={}, body={}, frame={})".format(rv, t, body, frame)
+    # def __repr__(self):
+    #     rv = self.rv.__repr__()
+    #     t = self.t.__repr__()
+    #     body = self.body.__repr__()
+    #     frame = self.frame.__repr__()
+    #     return "State({}, t={}, body={}, frame={})".format(rv, t, body, frame)
 
     def __str__(self):
         strings = ["{:<17}{}".format("Epoch:", self.t), "{:<17}{}".format("Reference frame:", self.frame),
