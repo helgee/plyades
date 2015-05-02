@@ -4,15 +4,15 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import const
-import time
-import orbit
+import plyades.const as const
+import plyades.time as time
+import plyades.orbit as orbit
 
 
 # Too much problems with Python 2.X
-# symbols = {"Sun": u"\u2609", "Mercury": u"\u263F", "Venus": u"\u2640", "Earth": u"\u2641",
-#            "Mars": u"\u2642", "Jupiter": u"\u2643", "Saturn": u"\u2644", "Uranus": u"\u26E2",
-#            "Neptune": u"\u2646", "Moon": u"\u263E"}
+symbols = {"Sun": u"\u2609", "Mercury": u"\u263F", "Venus": u"\u2640", "Earth": u"\u2641",
+           "Mars": u"\u2642", "Jupiter": u"\u2643", "Saturn": u"\u2644", "Uranus": u"\u26E2",
+           "Neptune": u"\u2646", "Moon": u"\u263E"}
 
 class State(collections.namedtuple("State", ["rv", "t", "body", "frame"])):
     __slots__ = ()
@@ -104,10 +104,10 @@ class Orbit:
             if dt is None:
                 tend = orbit.period(ele[0], mu)
                 dt = np.arange(step,tend,step)
-            self.elements = np.vstack((ele, orbit.kepler(ele, dt, mu)))
+            elements = np.vstack((ele, orbit.kepler(ele, dt, mu)))
             self.t = [t0 + datetime.timedelta(seconds=t) for t in dt]
             self.t.insert(0,t0)
-            self.state = orbit.vector(self.elements, mu)
+            self.state = orbit.vector(elements, mu)
 
     def plot(self):
         fig = plt.figure("Plyades Plot")

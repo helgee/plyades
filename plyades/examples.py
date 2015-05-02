@@ -1,7 +1,7 @@
 from __future__ import division
 import datetime
 import numpy as np
-from core import State, Orbit
+from plyades.core import State, Orbit
 
 iss_state = np.array([
     8.59072560e+02,

@@ -1,10 +1,10 @@
-from core import State, Orbit
-import const
-import ephem
-import examples
-import frames
-import orbit
-import state
-import time
-import util
-import vis
+from plyades.core import State, Orbit
+import plyades.const
+# import plyades.ephem
+import plyades.examples
+import plyades.frames
+import plyades.orbit
+import plyades.state
+import plyades.time
+import plyades.util
+import plyades.vis

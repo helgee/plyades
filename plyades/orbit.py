@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 from scipy import optimize
 import numpy as np
-import util
+import plyades.util as util
 
 
 def rhs(s, t):
