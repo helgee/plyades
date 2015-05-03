@@ -6,7 +6,11 @@ Plyades
 .. image:: https://travis-ci.org/helgee/plyades.png
     :target: https://travis-ci.org/helgee/plyades
 
-Plyades is an astrodynamics library, written in Python and based on Numpy and Scipy.	
+Plyades is an MIT-licensed astrodynamics library written in Python.
+It aims to provide a comprehensive toolset for fast development of performant
+mission analysis applications.
+The API provides powerful high-level objects for pythonic ease-of-use while the
+low-level functional building blocks can also be used independently.
 
 .. code-block:: python
 

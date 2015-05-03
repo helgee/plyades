@@ -1,6 +1,11 @@
 Installation
 ============
 
+Dependencies
+------------
+Plyades depends on the following third-party libraries:
+* Astropy
+
 Getting started
 ===============
 
@@ -34,5 +39,5 @@ Numerical solver
 Force model
 ^^^^^^^^^^^
 
-Orbit determination
-===================
+Visualization
+=============

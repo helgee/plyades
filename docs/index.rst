@@ -1,15 +1,16 @@
-.. Plyades documentation master file, created by
-   sphinx-quickstart on Mon Dec 10 14:54:27 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Plyades: A Python Astrodynamics Library
 =======================================
 
-Plyades is an MIT-licensed astrodynamics library based on Numpy and Scipy.
-It aims to provide a comprehensive toolset for common mission analysis and flight dynamics tasks.
-All functionality 
-The API provides powerful high-level objects for pythonic ease-of-use while all the function
+Plyades is an MIT-licensed astrodynamics library written in Python.
+It aims to provide a comprehensive toolset for fast development of performant
+mission analysis applications.
+The API provides powerful high-level objects for pythonic ease-of-use while the
+low-level functional building blocks can also be used independently.
+
+.. warning::
+    This library is currently a proof of concept and has not been
+    validated or used within an operational context. As soon as this changes
+    the validation results will be documented here.
 
 Features
 --------
@@ -32,8 +33,8 @@ API Documentation
 
 .. Indices and tables
 .. ==================
-.. 
+..
 .. * :ref:`genindex`
 .. * :ref:`modindex`
 .. * :ref:`search`
-.. 
+..
