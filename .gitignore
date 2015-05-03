@@ -37,3 +37,9 @@ nosetests.xml
 .DS_Store
 
 docs/_build/
+.idea/
+.ipynb_checkpoints/
+*.ipynb
+*.bsp
+env/
+venv/
