@@ -7,6 +7,7 @@ import plyades.util as util
 def rhs(s, t):
     pass
 
+
 def elements(vector, mu):
     r = np.atleast_2d(vector)[:, 0:3]
     v = np.atleast_2d(vector)[:, 3:6]
@@ -31,10 +32,10 @@ def elements(vector, mu):
     peri = np.arccos(util.dot(n, e) / (ecc * n_mag))
     ano = np.arccos(util.dot(e, r) / (ecc * r_mag))
     # Quadrant checks
-    n_ix = n[:, 1] < 0 
+    n_ix = n[:, 1] < 0
     if n_ix.any():
         node[n_ix] = 2 * np.pi - node[n_ix]
-    p_ix = e[:, 2] < 0 
+    p_ix = e[:, 2] < 0
     if p_ix.any():
         peri[p_ix] = 2 * np.pi - peri[p_ix]
     a_ix = util.dot(r, v) < 0
@@ -46,14 +47,18 @@ def elements(vector, mu):
     else:
         return np.hstack((sma, ecc, inc, node, peri, ano))
 
+
 def print_elements(ele):
     names = ["Semi-major axis [km]:", "Eccentricity:", "Inclination [deg]:",
              "Ascending node [deg]:", "Argument of perigee [deg]:",
              "True anomaly [deg]:"]
     elements = np.append(ele[0:2], np.degrees(ele[2:6]))
 
-    strings = ["{:<26}{:>16.5f}".format(name, element) for name, element in zip(names, elements)]
+    strings = [
+        "{:<26}{:>16.5f}".format(name, element)
+        for name, element in zip(names, elements)]
     print("\n".join(strings))
+
 
 def vector(elements, mu):
     ele = np.atleast_2d(elements)
@@ -71,39 +76,50 @@ def vector(elements, mu):
         p[e_ix] = sma[e_ix]
 
     r = p / (1 + ecc * np.cos(ano))
-    x = r * (np.cos(node) * np.cos(u) - np.sin(node) * np.cos(inc) * np.sin(u))
-    y = r * (np.sin(node) * np.cos(u) + np.cos(node) * np.cos(inc) * np.sin(u))
-    z = r * np.sin(inc) * np.sin(u)
-    vr = np.sqrt(mu / p) * ecc * np.sin(ano)
-    vf = np.sqrt(mu * p) / r
-    vx = (vr * (np.cos(node) * np.cos(u) - np.sin(node) * np.cos(inc) * np.sin(u))
-         - vf * (np.cos(node) * np.sin(u) + np.sin(node) * np.cos(u) * np.cos(inc)))
-    vy = (vr * (np.sin(node) * np.cos(u) + np.cos(node) * np.cos(inc) * np.sin(u))
-         - vf * (np.sin(node) * np.sin(u) - np.cos(node) * np.cos(u) * np.cos(inc)))
-    vz = vr * np.sin(inc) * np.sin(u) + vf * np.cos(u) * np.sin(inc)
+    x = r*(np.cos(node)*np.cos(u) - np.sin(node)*np.cos(inc)*np.sin(u))
+    y = r*(np.sin(node)*np.cos(u) + np.cos(node)*np.cos(inc)*np.sin(u))
+    z = r*np.sin(inc)*np.sin(u)
+    vr = np.sqrt(mu/p)*ecc*np.sin(ano)
+    vf = np.sqrt(mu*p)/r
+    vx = (
+        vr*(np.cos(node)*np.cos(u) - np.sin(node)*np.cos(inc)*np.sin(u)) -
+        vf*(np.cos(node)*np.sin(u) + np.sin(node)*np.cos(u)*np.cos(inc)))
+    vy = (
+        vr*(np.sin(node)*np.cos(u) + np.cos(node)*np.cos(inc)*np.sin(u)) -
+        vf*(np.sin(node)*np.sin(u) - np.cos(node)*np.cos(u)*np.cos(inc)))
+    vz = vr*np.sin(inc)*np.sin(u) + vf*np.cos(u)*np.sin(inc)
     if elements.shape == (6, ):
         return np.hstack((x, y, z, vx, vy, vz)).flatten()
     else:
         return np.hstack((x, y, z, vx, vy, vz))
 
+
 def period(a, mu):
     return np.sqrt(4 * a**3 * np.pi**2 / mu)
 
+
 def ecc2true(E, e):
-    return 2 * np.arctan2(np.sqrt(1 + e) * np.sin(E / 2), np.sqrt(1 - e) * np.cos(E / 2))
+    return 2*np.arctan2(np.sqrt(1 + e)*np.sin(E/2), np.sqrt(1 - e)*np.cos(E/2))
+
 
 def true2ecc(T, e):
-    return 2 * np.arctan2(np.sqrt(1 - e) * np.sin(T / 2), np.sqrt(1 + e) * np.cos(T / 2))
+    return 2*np.arctan2(np.sqrt(1 - e)*np.sin(T/2), np.sqrt(1 + e)*np.cos(T/2))
+
 
 def ecc2mean(E, e):
-    return E - e * np.sin(E)
+    return E - e*np.sin(E)
+
 
 def mean2ecc(M, e):
     def kepler_eq(E):
-        return E - e * np.sin(E) - M
+        return E - e*np.sin(E) - M
+
     def kepler_eq_der(E):
-        return 1 - e * np.cos(E)
-    return optimize.newton(kepler_eq, M, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+        return 1 - e*np.cos(E)
+
+    return optimize.newton(
+        kepler_eq, M, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+
 
 def kepler(ele, dt, mu):
     E0 = true2ecc(ele[5], ele[1])
@@ -112,17 +128,16 @@ def kepler(ele, dt, mu):
     M = M0 + n*dt
     if not np.isscalar(M):
         E = np.zeros(np.shape(M))
-        out = np.zeros((len(M),6))
+        out = np.zeros((len(M), 6))
         for i, m in enumerate(M):
             E[i] = mean2ecc(m, ele[1])
     else:
-        out = np.zeros((1,6))
+        out = np.zeros((1, 6))
         E = mean2ecc(M, ele[1])
     T = ecc2true(E, ele[1])
-    out[:,0:5] = ele[0:5]
-    out[:,5] = T
+    out[:, 0:5] = ele[0:5]
+    out[:, 5] = T
     if out.shape == (6, ):
         return out.flatten()
     else:
         return out
-
