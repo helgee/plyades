@@ -7,8 +7,8 @@ Plyades
     :target: https://travis-ci.org/helgee/plyades
 
 Plyades is an MIT-licensed astrodynamics library written in Python.
-It aims to provide a comprehensive toolset for fast development of performant
-mission analysis applications.
+It aims to provide a comprehensive toolset for fast development of
+high-performance mission analysis applications.
 The API provides powerful high-level objects for pythonic ease-of-use while the
 low-level functional building blocks can also be used independently.
 
@@ -26,25 +26,3 @@ low-level functional building blocks can also be used independently.
 Documentation
 -------------
 Read the documentation at `http://plyades.readthedocs.org <http://plyades.readthedocs.org>`_.
-
-Installation
-------------
-Clone the repository.
-
-Dependencies
-^^^^^^^^^^^^
-
-* Numpy
-* Scipy
-
-Getting Started
----------------
-
-State Representation
-^^^^^^^^^^^^^^^^^^^^
-
-Orbit Propagation
-^^^^^^^^^^^^^^^^^
-
-Visualization
-^^^^^^^^^^^^^
