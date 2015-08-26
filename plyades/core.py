@@ -137,7 +137,7 @@ class State:
     def plot3d(self):
         x, y, z, *_ = self.kepler()
 
-        fig = plt.figure("Plyades Plot")
+        fig = plt.figure("Plyades Plot", figsize=(8, 8))
         ax = fig.add_subplot(111, projection='3d')
         self.body.plot3d(ax)
         ax.plot(x, y, zs=z, color="r")
