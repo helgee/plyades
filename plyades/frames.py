@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
-import plyades.util
+import plyades.util as util
 
 def precession(date):
     ''' Vallado 2nd Edition p.215

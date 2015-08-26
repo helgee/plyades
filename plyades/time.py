@@ -2,6 +2,10 @@ from __future__ import division
 import datetime
 # from collections import namedtuple
 import numpy as np
+from plyades.constants import JD2000
+
+def julian_centuries(jd, base=2451545.0):
+    return (jd - base)/36525.0
 
 
 def sidereal(jd):

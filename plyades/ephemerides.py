@@ -10,8 +10,10 @@ class AnalyticalEphemeris:
 
 
 class NumericalEphemeris:
-    def __init__(self, spk):
+    def __init__(self, spk, units):
         self.kernel = SPK.open(spk)
+        self.r_unit = units[0]
+        self.v_unit = units[1]
         self.graph = nx.Graph()
         for edge in self.kernel.pairs:
             self.graph.add_edge(*edge)
@@ -24,10 +26,13 @@ class NumericalEphemeris:
         path = self.paths[0][id]
         if len(path) == 2:
             segment = self.kernel[0, id]
-            return np.hstack(segment.compute_and_differentiate(tdb, tdb2))
+            r, v = segment.compute_and_differentiate(tdb, tdb2)
         else:
-            arr = np.zeros(6)
+            r = np.zeros(3)
+            v = np.zeros(3)
             for i1, i2 in zip(path, path[1:]):
                 segment = self.kernel[i1, i2]
-                arr += np.hstack(segment.compute_and_differentiate(tdb, tdb2))
-            return arr
+                rs, vs = segment.compute_and_differentiate(tdb, tdb2)
+                r += rs
+                v += vs
+        return r * self.r_unit, v * self.v_unit
