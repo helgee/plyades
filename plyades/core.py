@@ -1,9 +1,12 @@
 import numpy as np
 from astropy.time import Time
-from astropy import units as u
+from astropy import units as units
 import plyades.orbit as orbit
 from plyades.bodies import EARTH
-
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from bokeh.io import vplot
+from bokeh.plotting import figure, show
 
 class State:
     def __init__(self, r, v, t, frame="MEE2000", body=EARTH):
@@ -14,6 +17,8 @@ class State:
         self.body = body
         self._array = np.vstack((np.array(r), np.array(v)))
         self._units = (r.unit, v.unit)
+        self.plot_height = 500
+        self.plot_width = 500
 
     def __array__(self):
         return self._array
@@ -63,39 +68,78 @@ class State:
     def period(self):
         return orbit.period(self.elements[0], self.body.mu)
 
+    # def kepler(self, dt):
+    #     n = 100
+    #     s0 = np.atleast_2d(self.state)[0,:]
+    #     t0 = np.atleast_1d(self.t)[0]
+    #     mu = const.planets[self.body.lower()]["mu"]
+    #     if self.solver == "kepler":
+    #         ele = orbit.elements(s0, mu)
+    #         if dt is None:
+    #             tend = orbit.period(ele[0], mu)
+    #             dt = np.arange(step,tend,step)
+    #         elements = np.vstack((ele, orbit.kepler(ele, dt, mu)))
+    #         self.t = [t0 + datetime.timedelta(seconds=t) for t in dt]
+    #         self.t.insert(0,t0)
+    #         self.state = orbit.vector(elements, mu)
 
-    def propagate(self, dt=None, revolutions=1, step=1):
-        s0 = np.atleast_2d(self.state)[0,:]
-        t0 = np.atleast_1d(self.t)[0]
-        mu = const.planets[self.body.lower()]["mu"]
-        if self.solver == "kepler":
-            ele = orbit.elements(s0, mu)
-            if dt is None:
-                tend = orbit.period(ele[0], mu)
-                dt = np.arange(step,tend,step)
-            elements = np.vstack((ele, orbit.kepler(ele, dt, mu)))
-            self.t = [t0 + datetime.timedelta(seconds=t) for t in dt]
-            self.t.insert(0,t0)
-            self.state = orbit.vector(elements, mu)
+    def kepler(self, n=100):
+        ano = np.linspace(-np.pi, np.pi, n)*units.rad
+        sma, ecc, inc, node, peri, _ = self.elements
+        sma = np.repeat(sma, n)
+        ecc = np.repeat(ecc, n)
+        inc = np.repeat(inc, n)
+        node = np.repeat(node, n)
+        peri = np.repeat(peri, n)
+        return orbit.cartesian(self.body.mu, sma, ecc, inc, node, peri, ano)
+
+    def plot_plane(self, plane='XY', show_plot=True):
+        x, y, z, *_ = self.kepler()
+        r = self.body.mean_radius.value
+        if plane == 'XY':
+            x, y, z = x.value, y.value, z.value
+        elif plane == 'XZ':
+            x, y, z = x.value, z.value, y.value
+        elif plane == 'YZ':
+            x, y, z = y.value, z.value, x.value
+
+        magnitudes = np.sqrt(np.square(x)+np.square(y))
+        limit = np.maximum(r, magnitudes.max()) * 1.2
+        f = figure(
+            height = self.plot_height,
+            width = self.plot_width,
+            title = 'XY-Plane',
+            x_range = (-limit, limit),
+            y_range = (-limit, limit),
+        )
+        ind = (magnitudes < r) & (z < 0)
+        start = -np.flatnonzero(ind)[0]
+        x_bg = x[ind]
+        y_bg = y[ind]
+        x_fg = x[~ind]
+        y_fg = y[~ind]
+        x_bg = np.roll(x_bg, start)
+        y_bg = np.roll(y_bg, start)
+        x_fg = np.roll(x_fg, start)
+        y_fg = np.roll(y_fg, start)
+        f.circle(x=0, y=0, radius=r, alpha=0.5)
+        f.line(x_fg, y_fg, line_width=2, color='darkblue')
+        f.circle(x_bg, y_bg, radius=10, color='blue')
+        if show_plot:
+            show(f)
+        else:
+            return f
 
     def plot(self):
-        n = 100
-        elements = np.zeros((n, 6))
-        elements[:,6] = np.linspace(-np.pi, np.pi, 100)
-        sma, ecc, inc, node, peri, _ = self.elements
+        plots = (self.plot_plane(plane, show_plot=False) for plane in ('XY', 'XZ', 'YZ'))
+        show(vplot(*plots))
+
+    def plot3d(self):
+        x, y, z, *_ = self.kepler()
 
         fig = plt.figure("Plyades Plot")
         ax = fig.add_subplot(111, projection='3d')
-        re = self.body.equatorial_radius
-        rp = self.body.polar_radius
-
-        u = np.linspace(0, 2 * np.pi, 100)
-        v = np.linspace(0, np.pi, 100)
-
-        x = re * np.outer(np.cos(u), np.sin(v))
-        y = re * np.outer(np.sin(u), np.sin(v))
-        z = rp * np.outer(np.ones(np.size(u)), np.cos(v))
-        ax.plot_surface(x, y, z,  rstride=4, cstride=4, color='b', alpha=.3, linewidth=1, edgecolor="b")
-        ax.plot(self.state[:,0], self.state[:,1], self.state[:,2], color="r")
+        self.body.plot3d(ax)
+        ax.plot(x, y, zs=z, color="r")
 
         plt.show()

@@ -1,4 +1,7 @@
 import astropy.units as u
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 from plyades.config import config
 
 
@@ -56,6 +59,29 @@ class Planet:
         r_target, v_target = self.rv(jd, jd2)
         r_origin, v_origin = body.rv(jd, jd2)
         return r_target-r_origin, v_target-v_origin
+
+    def plot3d(self, ax=None):
+        if not ax:
+            fig = plt.figure("Plyades Plot")
+            ax = fig.add_subplot(111, projection='3d')
+        re = self.equatorial_radius
+        rp = self.polar_radius
+
+        u = np.linspace(0, 2 * np.pi, 100)
+        v = np.linspace(0, np.pi, 100)
+
+        x = re * np.outer(np.cos(u), np.sin(v))
+        y = re * np.outer(np.sin(u), np.sin(v))
+        z = rp * np.outer(np.ones(np.size(u)), np.cos(v))
+        ax.plot_surface(x, y, z,
+            rstride=4,
+            cstride=4,
+            color='b',
+            alpha=.3,
+            linewidth=1,
+            edgecolor="b"
+        )
+
 
 
 class Moon:

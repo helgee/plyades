@@ -68,7 +68,7 @@ def print_elements(ele):
         print("{:<26}{:>16.5f}".format(name, np.degrees(element)))
 
 
-def vector(mu, sma, ecc, inc, node, peri, ano):
+def cartesian(mu, sma, ecc, inc, node, peri, ano):
     u = peri + ano
 
     p = sma * (1 - np.square(ecc))

@@ -3,7 +3,7 @@ import plyades.bodies
 import plyades.config
 # import plyades.constants
 # import plyades.ephemerides
-# import plyades.examples
+import plyades.examples
 # import plyades.frames
 # import plyades.orbit
 # import plyades.state
