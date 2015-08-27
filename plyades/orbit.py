@@ -3,6 +3,7 @@ from scipy import optimize
 import numpy as np
 import plyades.util as util
 
+
 class Orbit:
     pass
 #     def __init__(self, state, options=None, t=None):
@@ -26,6 +27,7 @@ class Orbit:
 #         return orbit.elements(self.state, mu)
 #
 
+
 def elements(mu, r, v):
     r = np.atleast_2d(r)
     v = np.atleast_2d(v)
@@ -46,7 +48,8 @@ def elements(mu, r, v):
         p = h_mag ** 2 / mu
         sma = p
     inc = np.arccos(h[:, 2, np.newaxis] / h_mag)
-    node = np.arccos(n[:, 0, np.newaxis] / n_mag)
+    # node = np.arccos(n[:, 0, np.newaxis] / n_mag)
+    node = np.arctan2(n[:, 1, np.newaxis]/h_mag, n[:, 0, np.newaxis]/h_mag)
     peri = np.arccos(util.dot(n, e) / (ecc * n_mag))
     ano = np.arccos(util.dot(e, r) / (ecc * r_mag))
     # Quadrant checks
@@ -98,27 +101,53 @@ def period(a, mu):
     return np.sqrt(4 * a**3 * np.pi**2 / mu)
 
 
-def ecc2true(E, e):
+def orbital_energy(a, mu):
+    return -mu/(2*a)
+
+
+def ecc_to_true(E, e):
     return 2*np.arctan2(np.sqrt(1 + e)*np.sin(E/2), np.sqrt(1 - e)*np.cos(E/2))
 
 
-def true2ecc(T, e):
+def true_to_ecc(T, e):
     return 2*np.arctan2(np.sqrt(1 - e)*np.sin(T/2), np.sqrt(1 + e)*np.cos(T/2))
 
 
-def ecc2mean(E, e):
-    return E - e*np.sin(E)
+def ecc_to_mean(E, e):
+    unit = getattr(E, 'unit', None)
+    if not unit:
+        return E - e*np.sin(E)
+    else:
+        return (E.value - e*np.sin(E))*unit
 
 
-def mean2ecc(M, e):
+def mean_to_ecc(M, e):
+    unit = getattr(M, 'unit', None)
+
+    if unit:
+        M = M.value
+        e = e.value
+
     def kepler_eq(E):
         return E - e*np.sin(E) - M
 
     def kepler_eq_der(E):
         return 1 - e*np.cos(E)
 
-    return optimize.newton(
-        kepler_eq, M, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+    if unit:
+        return optimize.newton(
+            kepler_eq, M, kepler_eq_der, args=(), tol=1e-10, maxiter=50)*unit
+    else:
+        return optimize.newton(
+            kepler_eq, M, kepler_eq_der, args=(), tol=1e-10, maxiter=50)
+
+
+def true_to_mean(T, e):
+    return ecc_to_mean(true_to_ecc(T, e), e)
+
+
+def mean_to_true(M, e):
+    return ecc_to_true(mean_to_ecc(M, e), e)
 
 
 def kepler(ele, dt, mu):
