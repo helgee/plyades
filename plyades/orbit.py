@@ -35,27 +35,27 @@ class Orbit:
         names = kwargs.get('names', default_names)
         self.interpolate = interpolate
         self.s0 = s0
-        self._states = np.vstack(states)
+        self._states = np.array(states)
         self.spline = interp1d(dt, self._states, kind='cubic')
         if interpolate:
             t = np.linspace(0.0, dt[-1], interpolate)
             epochs = s0.t + TimeDelta(t, format='sec')
             y = self.spline(t)
-            rx = y[0,:]
-            ry = y[1,:]
-            rz = y[2,:]
-            vx = y[3,:]
-            vy = y[4,:]
-            vz = y[5,:]
+            rx = y[0,:]*s0.r.unit
+            ry = y[1,:]*s0.r.unit
+            rz = y[2,:]*s0.r.unit
+            vx = y[3,:]*s0.v.unit
+            vy = y[4,:]*s0.v.unit
+            vz = y[5,:]*s0.v.unit
         else:
-            rx, ry, rz, vx, vy, vz = states
+            rx, ry, rz, vx, vy, vz = self._states
             t = dt
 
         if not elements:
             elements = kepler.elements(
                 s0.body.mu,
-                np.column_stack((rx, ry, rz))*s0.r.unit,
-                np.column_stack((vx, vy, vz))*s0.v.unit,
+                np.array((rx, ry, rz)).T*s0.r.unit,
+                np.array((vx, vy, vz)).T*s0.v.unit,
             )
 
         sma, ecc, inc, node, peri, ano = elements
