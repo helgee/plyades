@@ -1,6 +1,7 @@
 from astropy.table import Table
 from astropy.time import TimeDelta
-from bokeh.plotting import show
+import astropy.units as units
+from bokeh.plotting import show, figure
 from bokeh.io import vplot
 import numpy as np
 import pandas as pd
@@ -137,3 +138,76 @@ class Orbit:
 
     def plot3d(self):
         vis.plot3d(self)
+
+    def plot_element(self, element, show_plot=True):
+        if element == 'semi_major_axis':
+            y = self.table[element].quantity
+            f = figure(
+                x_axis_type='datetime',
+                width=500,
+                height=500,
+                title = 'Semi-major axis',
+            )
+        elif element == 'eccentricity':
+            y = self.table[element].quantity
+            f = figure(
+                x_axis_type='datetime',
+                width=500,
+                height=500,
+                title = 'Eccentricity',
+            )
+        elif element == 'inclination':
+            y = self.table[element].to(units.deg)
+            f = figure(
+                x_axis_type='datetime',
+                y_range=(0, 180),
+                width=500,
+                height=500,
+                title = 'Inclination',
+            )
+        elif element == 'ascending_node':
+            y = self.table[element].to(units.deg)
+            f = figure(
+                y_range=(0, 360),
+                x_axis_type='datetime',
+                width=500,
+                height=500,
+                title = 'Longitude of ascending node',
+            )
+        elif element == 'argument_of_periapsis':
+            y = self.table[element].to(units.deg)
+            f = figure(
+                y_range=(0, 360),
+                x_axis_type='datetime',
+                width=500,
+                height=500,
+                title = 'Argument of periapsis',
+            )
+        elif element == 'true_anomaly':
+            y = self.table[element].to(units.deg)
+            f = figure(
+                x_axis_type='datetime',
+                y_range=(0, 180),
+                width=500,
+                height=500,
+                title = 'True anomaly',
+            )
+
+        f.line(x=self.epoch.datetime, y=y.value, line_width=2)
+        if show_plot:
+            show(f)
+        else:
+            return f
+
+
+    def plot_elements(self):
+        elements = (
+            'semi_major_axis',
+            'eccentricity',
+            'inclination',
+            'ascending_node',
+            'argument_of_periapsis',
+            'true_anomaly',
+        )
+        plots = [self.plot_element(element, show_plot=False) for element in elements]
+        show(vplot(*plots))
