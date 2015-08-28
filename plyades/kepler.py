@@ -2,30 +2,7 @@ from __future__ import division, print_function
 from scipy import optimize
 import numpy as np
 import plyades.util as util
-
-
-class Orbit:
-    pass
-#     def __init__(self, state, options=None, t=None):
-#         if options is None:
-#             options = {}
-#         self.body = options.get("body", "Earth")
-#         self.frame = options.get("frame", "MEE2000")
-#         self.solver = options.get("solver", "kepler")
-#         self.t = getattr(state, "t", t)
-#         if self.t is None:
-#             raise ValueError("Initial epoch has not been set.")
-#         self.state = getattr(state, "rv", state)
-#
-#     def __str__(self):
-#         string = ["Orbit at initial epoch:"]
-#         return "\n".join(string)
-#
-#     @property
-#     def elements(self):
-#         mu = const.planets[self.body.lower()]["mu"]
-#         return orbit.elements(self.state, mu)
-#
+import astropy.units as units
 
 
 def elements(mu, r, v):
