@@ -128,8 +128,8 @@ class Orbit:
         else:
             return [type(self.s0).from_array(e, t, self.s0) for e in arr.T]
 
-    def plot_plane(self, plane='XY'):
-        vis.plot_plane(self, plane=plane)
+    def plot_plane(self, plane='XY', show_steps=True):
+        vis.plot_plane(self, plane=plane, show_steps=show_steps)
 
     def plot(self):
         plots = [vis.plot_plane(self, plane=plane, show_plot=False) for plane in ('XY', 'XZ', 'YZ')]

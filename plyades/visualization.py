@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
-def plot_plane(orb, plane='XY', show_plot=True, width=500, height=500):
+def plot_plane(orb, plane='XY', show_steps=True, show_plot=True, width=500, height=500):
     r = orb.s0.body.mean_radius.value
     x, y, z = np.array(orb.rx), np.array(orb.ry), np.array(orb.rz)
     if plane == 'XY':
@@ -52,7 +52,7 @@ def plot_plane(orb, plane='XY', show_plot=True, width=500, height=500):
     f.circle(x=0, y=0, radius=r, alpha=0.5)
     f.line(x_fg, y_fg, line_width=2, color='darkblue')
     f.circle(x_bg, y_bg, size=2, color='darkblue')
-    if orb.interpolate:
+    if orb.interpolate and show_steps:
         f.cross(x=xs, y=ys, size=15, line_width=2, color='darkblue')
     f.cross(x=x0, y=y0, size=15, line_width=2, color='red')
     if show_plot:
