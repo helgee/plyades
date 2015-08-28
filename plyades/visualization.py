@@ -55,6 +55,7 @@ def plot_plane(orb, plane='XY', show_steps=True, show_plot=True, width=500, heig
     if orb.interpolate and show_steps:
         f.cross(x=xs, y=ys, size=15, line_width=2, color='darkblue')
     f.cross(x=x0, y=y0, size=15, line_width=2, color='red')
+    f.x(x=x[-1], y=y[-1], size=12, line_width=3, color='purple')
     if show_plot:
         show(f)
     else:
