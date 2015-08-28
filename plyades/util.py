@@ -5,6 +5,17 @@ import re
 import numpy as np
 import astropy.units as u
 
+def istime(t):
+    try:
+        t.jd
+    except AttributeError:
+        return False
+    else:
+        return True
+
+def nearest_idx(array, value):
+    return (np.abs(array-value)).argmin()
+
 def rot(angle, axis=3):
     '''
 

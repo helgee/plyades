@@ -83,7 +83,6 @@ class Planet:
         )
 
 
-
 class Moon:
     pass
 
