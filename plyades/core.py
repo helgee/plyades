@@ -1,6 +1,7 @@
 from bokeh.io import vplot
 from bokeh.plotting import show
 from copy import deepcopy
+from IPython.display import Latex
 import numpy as np
 from astropy import units as units
 from astropy.time import Time, TimeDelta
@@ -72,8 +73,40 @@ class State:
         self.r = self._array[:3]*self.r.unit
         self.v = self._array[3:]*self.v.unit
 
-    def print_elements(self):
-        kepler.print_elements(self.elements)
+    def _repr_latex_(self):
+        strings = [
+            "Time: {}".format(self.t.iso),
+            "Reference frame: {}".format(self.frame),
+            "Central body: {} {}<br/>".format(self.body.name, self.body.symbol),
+            "$r_x = {}$ {}".format(self.r[0].value, self.r[0].unit._repr_latex_()),
+            "$r_y = {}$ {}".format(self.r[1].value, self.r[1].unit._repr_latex_()),
+            "$r_z = {}$ {}".format(self.r[2].value, self.r[2].unit._repr_latex_()),
+            "$v_x = {}$ {}".format(self.v[0].value, self.v[0].unit._repr_latex_()),
+            "$v_y = {}$ {}".format(self.v[1].value, self.v[1].unit._repr_latex_()),
+            "$v_z = {}$ {}".format(self.v[2].value, self.v[2].unit._repr_latex_()),
+        ]
+        return "<br/>".join(strings)
+
+    def pprint_elements(self):
+        inc = self.inclination.to(units.deg)
+        node = self.ascending_node.to(units.deg)
+        peri = self.argument_of_periapsis.to(units.deg)
+        ano = self.true_anomaly.to(units.deg)
+        strings = [
+            "Semi-major axis:",
+            "$a = {}$ {}".format(self.semi_major_axis.value, self.semi_major_axis.unit),
+            "Eccentricity:",
+            "$e = {}$ {}".format(self.eccentricity.value, self.eccentricity.unit),
+            "Inclination:",
+            "$i = {}$ {}".format(inc.value, inc.unit),
+            "Longitude of ascending node:",
+            "$\Omega = {}$ {}".format(node.value, node.unit),
+            "Argument of periapsis:",
+            "$\omega = {}$ {}".format(peri.value, peri.unit),
+            "True anomaly:",
+            "$\\nu = {}$ {}".format(ano.value, ano.unit),
+        ]
+        return Latex("<br/>".join(strings))
 
     def wrt(self, body):
         r_origin, v_origin = body.rv(self.t.jd, self.t.jd2)
@@ -173,6 +206,6 @@ class State:
             tout.append(t)
             yout.append(y)
         tout = np.array(tout)*time_unit
-        yout = np.vstack(yout)
         epochs = self.t + TimeDelta(tout.to(units.s), format='sec')
-        return Orbit(deepcopy(self), tout, epochs, yout.T, interpolate=interpolate, **kwargs)
+        yout = np.array(yout).T
+        return Orbit(deepcopy(self), tout, epochs, yout, interpolate=interpolate, **kwargs)
