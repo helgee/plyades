@@ -9,7 +9,7 @@ class Propagator:
         self.dt = dt
         self.forces = []
         self.solver = ode(self._rhs).set_integrator('dop853', nsteps=1, **kwargs)
-        self.solver.set_initial_value(np.array(s0), 0.0)
+        self.solver.set_initial_value(np.copy(s0), 0.0)
         self.solver._integrator.iwork[2] = -1
 
     def _rhs(self, t, y):

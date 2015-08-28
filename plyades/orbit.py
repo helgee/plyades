@@ -3,6 +3,7 @@ from astropy.time import TimeDelta
 from bokeh.plotting import show
 from bokeh.io import vplot
 import numpy as np
+import pandas as pd
 from scipy.interpolate import interp1d
 
 import plyades.kepler as kepler
@@ -10,7 +11,11 @@ import plyades.util as util
 import plyades.visualization as vis
 
 class Orbit:
-    def __init__(self, s0, dt, epochs, states, elements=None, points=None, **kwargs):
+    def __init__(
+        self, s0, dt, epochs, states,
+        elements=None, interpolate=False,
+        **kwargs
+    ):
         default_names = [
             'dt',
             'epoch',
@@ -28,31 +33,33 @@ class Orbit:
             'true_anomaly',
         ]
         names = kwargs.get('names', default_names)
+        self.interpolate = interpolate
         self.s0 = s0
-        states = np.vstack(states)
-        self.spline = interp1d(dt, states, kind='cubic')
-        if points:
-            dt = np.linspace(0.0, dt[-1], points)
-            epochs = s0.t + TimeDelta(dt, format='sec')
-            y = self.spline(dt)
+        self._states = np.vstack(states)
+        self.spline = interp1d(dt, self._states, kind='cubic')
+        if interpolate:
+            t = np.linspace(0.0, dt[-1], interpolate)
+            epochs = s0.t + TimeDelta(t, format='sec')
+            y = self.spline(t)
             rx = y[0,:]
             ry = y[1,:]
             rz = y[2,:]
             vx = y[3,:]
             vy = y[4,:]
             vz = y[5,:]
+        else:
+            rx, ry, rz, vx, vy, vz = states
+            t = dt
+
+        if not elements:
             elements = kepler.elements(
                 s0.body.mu,
                 np.column_stack((rx, ry, rz))*s0.r.unit,
                 np.column_stack((vx, vy, vz))*s0.v.unit,
             )
-            self.states = states
-        else:
-            rx, ry, rz, vx, vy, vz = states
-            self.states = None
 
         sma, ecc, inc, node, peri, ano = elements
-        columns = [dt, epochs, rx, ry, rz, vx, vy, vz, sma, ecc, inc, node, peri, ano]
+        columns = [t, epochs, rx, ry, rz, vx, vy, vz, sma, ecc, inc, node, peri, ano]
         self.table = Table(columns, names=names)
 
     @property
@@ -120,6 +127,9 @@ class Orbit:
             return type(self.s0).from_array(arr, t, self.s0) 
         else:
             return [type(self.s0).from_array(e, t, self.s0) for e in arr.T]
+
+    def plot_plane(self, plane='XY'):
+        vis.plot_plane(self, plane=plane)
 
     def plot(self):
         plots = [vis.plot_plane(self, plane=plane, show_plot=False) for plane in ('XY', 'XZ', 'YZ')]

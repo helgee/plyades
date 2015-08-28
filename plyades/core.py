@@ -1,5 +1,6 @@
 from bokeh.io import vplot
 from bokeh.plotting import show
+from copy import deepcopy
 import numpy as np
 from astropy import units as units
 from astropy.time import Time, TimeDelta
@@ -28,7 +29,7 @@ class State:
         self.t = Time(t)
         self.frame = frame
         self.body = body
-        self._array = np.hstack((np.array(r), np.array(v)))
+        self._array = np.hstack((np.copy(r), np.copy(v)))
         self._gravity = forces.newton
         self._forces = []
         if vars:
@@ -37,11 +38,6 @@ class State:
     def force(self, func):
         self._forces.append(func)
 
-    @property
-    def gravity(self):
-        return self._gravity
-
-    @gravity.setter
     def gravity(self, func):
         self._gravity = func
 
@@ -152,7 +148,10 @@ class State:
         peri = np.repeat(peri, n)
         epochs = self.t + TimeDelta(dt, format='sec')
         states = kepler.cartesian(self.body.mu, sma, ecc, inc, node, peri, ano)
-        return Orbit(self, dt, epochs, states, elements=[sma, ecc, inc, node, peri, ano])
+        return Orbit(
+            deepcopy(self), dt, epochs, states,
+            elements=[sma, ecc, inc, node, peri, ano]
+        )
 
     def kepler_state(self, dt):
         sma, ecc, inc, node, peri, true_ano = self.elements
@@ -164,11 +163,11 @@ class State:
             self.t+TimeDelta(dt, format='sec'),
             self.frame, self.body)
 
-    def propagate(self, dt=1*units.year, time_unit=units.s, points=100):
+    def propagate(self, dt=1*units.year, time_unit=units.s, interpolate=100, **kwargs):
         tout = [0.0]
-        yout = [np.array(self)]
-        p = Propagator(self, dt.to(time_unit).value)
-        p.forces = self._forces
+        yout = [np.copy(self)]
+        p = Propagator(self, dt.to(time_unit).value, **kwargs)
+        p.forces = list(self._forces)
         p.forces.append(self._gravity)
         for t, y in p:
             tout.append(t)
@@ -176,4 +175,4 @@ class State:
         tout = np.array(tout)*time_unit
         yout = np.vstack(yout)
         epochs = self.t + TimeDelta(tout.to(units.s), format='sec')
-        return Orbit(self, tout, epochs, yout.T, points=points)
+        return Orbit(deepcopy(self), tout, epochs, yout.T, interpolate=interpolate, **kwargs)
