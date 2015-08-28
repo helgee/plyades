@@ -29,6 +29,7 @@ class Planet:
         mean_radius,
         equatorial_radius,
         polar_radius,
+        j2,
         jpl_id,
         symbol,
         # rotational_elements,
@@ -38,6 +39,7 @@ class Planet:
         self.mean_radius = mean_radius
         self.equatorial_radius = equatorial_radius
         self.polar_radius = polar_radius
+        self.j2 = j2
         self.jpl_id = jpl_id
         self.symbol = symbol
         # self._rotational_elements = rotational_elements
@@ -96,6 +98,7 @@ MERCURY = Planet(
     2439.7*u.km,
     2439.7*u.km,
     2439.7*u.km,
+    0.0,
     199,
     u"\u263F",
 )
@@ -105,6 +108,7 @@ VENUS = Planet(
     6051.8*u.km,
     6051.8*u.km,
     6051.8*u.km,
+    0.0,
     299,
     u"\u2640",
 )
@@ -114,6 +118,7 @@ EARTH = Planet(
     6371.0084*u.km,
     6378.1366*u.km,
     6356.7519*u.km,
+    0.0010826269,
     399,
     u"\u2641",
 )
@@ -123,6 +128,7 @@ MARS = Planet(
     3389.50*u.km,
     3396.19*u.km,
     3376.20*u.km,
+    0.0,
     4,
     u"\u2642",
 )
@@ -132,6 +138,7 @@ JUPITER = Planet(
     69911.0*u.km,
     71492.0*u.km,
     66854.0*u.km,
+    0.0,
     5,
     u"\u2643",
 )
@@ -141,6 +148,7 @@ SATURN = Planet(
     58232.0*u.km,
     60268.0*u.km,
     54364.0*u.km,
+    0.0,
     6,
     u"\u2644",
 )
@@ -150,6 +158,7 @@ URANUS = Planet(
     25362.0*u.km,
     25559.0*u.km,
     24973.0*u.km,
+    0.0,
     7,
     u"\u26E2",
 )
@@ -159,6 +168,7 @@ NEPTUNE = Planet(
     24622.0*u.km,
     24764.0*u.km,
     24341.0*u.km,
+    0.0,
     8,
     u"\u2646",
 )
