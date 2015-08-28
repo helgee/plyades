@@ -50,7 +50,7 @@ def plot_plane(orb, plane='XY', show_steps=True, show_plot=True, width=500, heig
     x_fg[ind] = nan
     y_fg[ind] = nan
     f.circle(x=0, y=0, radius=r, alpha=0.5)
-    f.line(x_fg, y_fg, line_width=2, color='darkblue')
+    f.line(x_fg, y_fg, line_width=2, color='blue')
     f.circle(x_bg, y_bg, size=2, color='darkblue')
     if orb.interpolate and show_steps:
         f.cross(x=xs, y=ys, size=15, line_width=2, color='darkblue')
