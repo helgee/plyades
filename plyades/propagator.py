@@ -8,20 +8,22 @@ class Propagator:
         self.s0 = s0
         self.dt = dt
         self.forces = []
+        self.params = {'body': s0.body, 'frame': s0.frame}
         self.solver = ode(self._rhs).set_integrator('dop853', nsteps=1, **kwargs)
         self.solver.set_initial_value(np.copy(s0), 0.0)
+        self.solver.set_f_params(self.params)
         self.solver._integrator.iwork[2] = -1
 
-    def _rhs(self, t, y):
+    def _rhs(self, t, y, params):
         f = np.zeros_like(y)
-        s = type(self.s0)(
-            y[:3], y[3:], self.s0.t + TimeDelta(t, format='sec'),
-            frame=self.s0.frame,
-            body=self.s0.body,
-            vars=y[6:],
-        )
+        # s = type(self.s0)(
+        #     y[:3], y[3:], self.s0.t + TimeDelta(t, format='sec'),
+        #     frame=self.s0.frame,
+        #     body=self.s0.body,
+        #     vars=y[6:],
+        # )
         for fn in self.forces:
-            f += fn(s)
+            fn(f, t, y, params)
         return f
 
     def step(self):
