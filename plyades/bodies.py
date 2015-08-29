@@ -44,13 +44,19 @@ class Planet:
         self.symbol = symbol
         # self._rotational_elements = rotational_elements
 
-    def _repr_html_(self):
+    def _repr_latex_(self):
         strs = [
-            "<h2>{} {}</h2>".format(self.name, self.symbol),
-            "Gravitational parameter ($\mu$): {}".format(self.mu._repr_latex_()),
-            "Mean radius ($r_m$): {}".format(self.mean_radius),
-            "Equatorial radius ($r_e$): {}".format(self.equatorial_radius),
-            "Polar radius ($r_p$): {}".format(self.polar_radius),
+            "{} {}".format(self.name, self.symbol),
+            "Gravitational parameter:",
+            "$\mu={}$ {}".format(self.mu.value, self.mu.unit),
+            "Mean radius:",
+            "$r_m={}$: {}".format(self.mean_radius.value, self.mean_radius.unit),
+            "Equatorial radius:",
+            "$r_e={}$ {}".format(self.equatorial_radius.value, self.equatorial_radius.unit),
+            "Polar radius:",
+            "$r_p={}$ {}".format(self.polar_radius.value, self.polar_radius.unit),
+            "J2:",
+            "$J_2={}$".format(self.j2),
         ]
         return "<br />".join(strs)
 

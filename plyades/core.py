@@ -76,8 +76,9 @@ class State:
     def _repr_latex_(self):
         strings = [
             "Time: {}".format(self.t.iso),
-            "Reference frame: {}".format(self.frame),
-            "Central body: {} {}<br/>".format(self.body.name, self.body.symbol),
+            "Reference frame: {}<br/>".format(self.frame),
+            "Central body:<br/>"
+            "{}<br/>".format(self.body._repr_latex_()),
             "$r_x = {}$ {}".format(self.r[0].value, self.r[0].unit._repr_latex_()),
             "$r_y = {}$ {}".format(self.r[1].value, self.r[1].unit._repr_latex_()),
             "$r_z = {}$ {}".format(self.r[2].value, self.r[2].unit._repr_latex_()),
