@@ -71,7 +71,7 @@ def plot3d(orb, show_plot=True):
     fig = plt.figure("Plyades Plot", figsize=(8, 8))
     ax = fig.add_subplot(111, projection='3d')
     orb.s0.body.plot3d(ax)
-    ax.plot(orb.rx, orb.ry, zs=orb.rz, color="r")
+    ax.plot(orb.rx, orb.ry, zs=orb.rz, color="r", linewidth=3)
     unit = orb.s0.r.unit
     ax.set_xlabel('x [{}]'.format(unit))
     ax.set_ylabel('y [{}]'.format(unit))
