@@ -8,6 +8,8 @@ import numpy as np
 def plot_plane(orb, plane='XY', show_steps=True, show_plot=True, width=500, height=500):
     r = orb.s0.body.mean_radius.value
     x, y, z = np.array(orb.rx), np.array(orb.ry), np.array(orb.rz)
+    unit = orb.s0.r.unit
+    x_label, y_label = plane[0], plane[1]
     if plane == 'XY':
         x, y, z = x, y, z
         x0 = orb.s0.r[0].value
@@ -38,6 +40,8 @@ def plot_plane(orb, plane='XY', show_steps=True, show_plot=True, width=500, heig
         title = plane,
         x_range = (-limit, limit),
         y_range = (-limit, limit),
+        x_axis_label = "{} [{}]".format(x_label, unit),
+        y_axis_label = "{} [{}]".format(y_label, unit),
     )
     ind = (magnitudes < r) & (z < 0)
     nan = float('nan')
@@ -53,9 +57,10 @@ def plot_plane(orb, plane='XY', show_steps=True, show_plot=True, width=500, heig
     f.line(x_fg, y_fg, line_width=2, color='blue')
     f.circle(x_bg, y_bg, size=2, color='darkblue')
     if orb.interpolate and show_steps:
-        f.cross(x=xs, y=ys, size=15, line_width=2, color='darkblue')
-    f.cross(x=x0, y=y0, size=15, line_width=2, color='purple')
-    f.x(x=x[-1], y=y[-1], size=12, line_width=3, color='purple')
+        f.cross(x=xs[1:-1], y=ys[1:-1], size=15, line_width=3, color='darkblue')
+    f.cross(x=x0, y=y0, size=15, line_width=3, color='red')
+    if orb.interpolate:
+        f.x(x=x[-1], y=y[-1], size=12, line_width=3, color='red')
     if show_plot:
         show(f)
     else:
@@ -67,6 +72,10 @@ def plot3d(orb, show_plot=True):
     ax = fig.add_subplot(111, projection='3d')
     orb.s0.body.plot3d(ax)
     ax.plot(orb.rx, orb.ry, zs=orb.rz, color="r")
+    unit = orb.s0.r.unit
+    ax.set_xlabel('x [{}]'.format(unit))
+    ax.set_ylabel('y [{}]'.format(unit))
+    ax.set_zlabel('z [{}]'.format(unit))
 
     if show_plot:
         plt.show()
