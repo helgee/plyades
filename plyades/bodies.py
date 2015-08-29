@@ -13,6 +13,10 @@ from plyades.config import config
 # Archinal, et al. "Erratum to: Reports of the IAU Working Group on
 # Cartographic Coordinates and Rotational Elements: 2006 & 2009."
 # Celestial Mechanics and Dynamical Astronomy 110.4 (2011): 401-403.
+#
+# Vallado, David A., and Wayne D. McClain.
+# Fundamentals of astrodynamics and applications.
+# Fourth Edition. Springer Science & Business Media, 2013.
 
 # symbols = {
 #     "Sun": u"\u2609", "Mercury": u"\u263F", "Venus": u"\u2640",
@@ -100,21 +104,21 @@ class SmallBody:
 
 MERCURY = Planet(
     'Mercury',
-    0.0*u.km**3/u.s**2,
+    2.2032e4*u.km**3/u.s**2,
     2439.7*u.km,
     2439.7*u.km,
     2439.7*u.km,
-    0.0,
+    0.00006,
     199,
     u"\u263F",
 )
 VENUS = Planet(
     'Venus',
-    0.0*u.km**3/u.s**2,
+    3.257e5*u.km**3/u.s**2,
     6051.8*u.km,
     6051.8*u.km,
     6051.8*u.km,
-    0.0,
+    0.000027,
     299,
     u"\u2640",
 )
@@ -130,51 +134,51 @@ EARTH = Planet(
 )
 MARS = Planet(
     'Mars',
-    0.0*u.km**3/u.s**2,
+    4.305e4*u.km**3/u.s**2,
     3389.50*u.km,
     3396.19*u.km,
     3376.20*u.km,
-    0.0,
+    0.001964,
     4,
     u"\u2642",
 )
 JUPITER = Planet(
     'Jupiter',
-    0.0*u.km**3/u.s**2,
+    1.268e8*u.km**3/u.s**2,
     69911.0*u.km,
     71492.0*u.km,
     66854.0*u.km,
-    0.0,
+    0.01475,
     5,
     u"\u2643",
 )
 SATURN = Planet(
     'Saturn',
-    0.0*u.km**3/u.s**2,
+    3.794e7*u.km**3/u.s**2,
     58232.0*u.km,
     60268.0*u.km,
     54364.0*u.km,
-    0.0,
+    0.01645,
     6,
     u"\u2644",
 )
 URANUS = Planet(
     'Uranus',
-    0.0*u.km**3/u.s**2,
+    5.794e6*u.km**3/u.s**2,
     25362.0*u.km,
     25559.0*u.km,
     24973.0*u.km,
-    0.0,
+    0.012,
     7,
     u"\u26E2",
 )
 NEPTUNE = Planet(
     'Neptune',
-    0.0*u.km**3/u.s**2,
+    6.809e6*u.km**3/u.s**2,
     24622.0*u.km,
     24764.0*u.km,
     24341.0*u.km,
-    0.0,
+    0.004,
     8,
     u"\u2646",
 )
