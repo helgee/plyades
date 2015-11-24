@@ -1,4 +1,4 @@
-**Note:** This software is currently work in progress and far from feature completeness.
+**Note:** Plyades has been superseeded by the `Python Astrodynamics Project <https://github.com/python-astrodynamics/astrodynamics>`_.
 
 Plyades
 =======
