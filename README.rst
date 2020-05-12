@@ -1,4 +1,7 @@
-**Note:** Plyades has been superseeded by the `Python Astrodynamics Project <https://github.com/python-astrodynamics/astrodynamics>`_.
+**DEPRECATED**
+
+- For a spiritual successor in Python have a look at `poliastro <https://github.com/poliastro/poliastro>`_.
+- If you are interested in Julia have a look at `Astrodynamics.jl <https://github.com/JuliaSpace/Astrodynamics.jl>`_.
 
 Plyades
 =======
